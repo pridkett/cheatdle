@@ -84,9 +84,12 @@ export const useWordleStore = defineStore('wordle', () => {
       if (pos !== '.') {
         return pos;  // Green letter - must be exactly this
       }
-      // If we have letters that can't be in this position, exclude them
-      const excluded = Array.from(notInPosition[i]);
-      return excluded.length > 0 ? `[^${excluded.join('')}]` : '.';
+      // Combine position-specific exclusions with global must-not-contain letters
+      const excluded = new Set([
+        ...Array.from(notInPosition[i]),
+        ...Array.from(mustNotContain)
+      ]);
+      return excluded.size > 0 ? `[^${Array.from(excluded).join('')}]` : '.';
     });
 
     // Build the complete regex pattern
@@ -99,25 +102,16 @@ export const useWordleStore = defineStore('wordle', () => {
     console.log('Must not contain letters:', Array.from(mustNotContain));
     console.log('Final regex pattern:', pattern);
 
-    // Filter words based on regex and constraints
+    // Filter words based on regex and must-contain constraints
     filteredWords.value = wordlist.filter(entry => {
       const word = entry.word.toLowerCase();
       
-      // First check the regex pattern which handles position constraints
+      // Check the regex pattern which handles position and must-not-contain constraints
       if (!regex.test(word)) return false;
 
-      // Then check if word contains all required letters
-      const mustContainPattern = Array.from(mustContain).join('|');
-      if (mustContainPattern) {
-        for (const letter of mustContain) {
-          if (!word.includes(letter)) return false;
-        }
-      }
-
-      // Finally check if word contains any forbidden letters
-      const mustNotContainPattern = Array.from(mustNotContain).join('');
-      if (mustNotContainPattern && new RegExp(`[${mustNotContainPattern}]`).test(word)) {
-        return false;
+      // Check if word contains all required letters
+      for (const letter of mustContain) {
+        if (!word.includes(letter)) return false;
       }
 
       return true;
