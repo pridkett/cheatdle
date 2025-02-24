@@ -93,6 +93,12 @@ export const useWordleStore = defineStore('wordle', () => {
     const pattern = `^${positionPatterns.join('')}$`;
     const regex = new RegExp(pattern);
 
+    // Debug logging
+    console.log('Position patterns:', positionPatterns);
+    console.log('Must contain letters:', Array.from(mustContain));
+    console.log('Must not contain letters:', Array.from(mustNotContain));
+    console.log('Final regex pattern:', pattern);
+
     // Filter words based on regex and constraints
     filteredWords.value = wordlist.filter(entry => {
       const word = entry.word.toLowerCase();
