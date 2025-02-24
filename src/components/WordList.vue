@@ -20,12 +20,25 @@ const sortedWords = computed(() => {
 
 <template>
   <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4">
-    <h2 class="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200">
-      {{ store.filteredWords.length > 0 ? `${store.filteredWords.length} Possible Words` : '' }}
+    <h2 class="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200 text-center">
+      {{ store.filteredWords.length === 1 ? '1 Possible Word' : 
+         store.filteredWords.length > 0 ? `${store.filteredWords.length} Possible Words` : '' }}
     </h2>
     
-    <div v-if="tooManyMatches" class="text-gray-600 dark:text-gray-400">
+    <div v-if="tooManyMatches" class="text-gray-600 dark:text-gray-400 text-center">
       Too Many To List - Keep Guessing
+    </div>
+    <div v-else-if="store.filteredWords.length === 1" 
+      class="flex flex-col items-center justify-center py-12 text-gray-600 dark:text-gray-400"
+    >
+      <div class="text-6xl animate-wobble">🎉</div>
+      <div 
+        class="mt-4 py-2 px-3 border-b last:border-0 border-gray-200 dark:border-gray-700
+               text-gray-800 dark:text-gray-200 flex justify-between items-center w-full"
+      >
+        <span class="font-mono">{{ sortedWords[0].word }}</span>
+        <span class="text-sm text-gray-500 dark:text-gray-400">{{ sortedWords[0].formattedFreq }}</span>
+      </div>
     </div>
     <div v-else-if="store.filteredWords.length === 0" 
       class="flex flex-col items-center justify-center py-12 text-gray-600 dark:text-gray-400"
