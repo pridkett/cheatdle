@@ -46,7 +46,7 @@ onMounted(() => {
     <HelpModal ref="helpModal" />
     <header class="py-6">
       <div class="container mx-auto px-4">
-        <div class="flex justify-between items-center">
+        <div class="flex flex-col items-center gap-4">
           <h1 class="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 animate-title-shine tracking-tight transform hover:scale-105 transition-transform duration-200 cursor-default select-none" style="text-shadow: 3px 3px 6px rgba(0,0,0,0.2);">
             CHEATDLE
           </h1>
@@ -69,7 +69,7 @@ onMounted(() => {
         </div>
 
         <div class="mt-6">
-          <div class="grid grid-cols-1 lg:grid-cols-[1fr,400px] gap-8">
+          <div class="flex flex-col lg:flex-row items-start gap-8 justify-center">
             <div class="flex flex-col items-center">
               <Board class="mb-8" />
               <Keyboard
@@ -80,9 +80,7 @@ onMounted(() => {
               />
             </div>
 
-            <aside class="lg:mt-0">
-              <WordList />
-            </aside>
+            <WordList class="w-full lg:w-[400px]" />
           </div>
 
         </div>
