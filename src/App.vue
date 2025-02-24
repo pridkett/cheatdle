@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { RouterLink, RouterView } from 'vue-router'
 import Board from './components/Board.vue'
 import Keyboard from './components/Keyboard.vue'
 import WordList from './components/WordList.vue'
@@ -86,9 +85,5 @@ onMounted(() => {
         </div>
       </div>
     </header>
-
-    <main class="container mx-auto px-4 py-8">
-      <RouterView />
-    </main>
   </div>
 </template>
