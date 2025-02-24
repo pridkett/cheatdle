@@ -1,4 +1,3 @@
-import { parse } from 'csv-parse/sync'
 import { readFileSync, writeFileSync } from 'fs'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
@@ -7,21 +6,34 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 const projectRoot = join(__dirname, '..')
 
+// Get input filename from command line args, default to google-words.txt
+const inputFile = process.argv[2] || 'google-words.txt'
+
 try {
-  // Read the CSV file
-  const csvContent = readFileSync(join(projectRoot, 'word-list.csv'), 'utf-8')
+  // Read the input file
+  const content = readFileSync(join(projectRoot, inputFile), 'utf-8')
   
-  // Parse CSV content
-  const records = parse(csvContent, {
-    columns: true,
-    skip_empty_lines: true
-  })
+  // Parse the file content (assuming space/tab separated values)
+  const records = content
+    .split('\n')
+    .filter(line => line.trim())
+    .map(line => {
+      const [word, freq] = line.trim().split(/\s+/)
+      return {
+        word: word.trim(),
+        frequency: parseInt(freq || '0', 10)
+      }
+    })
+    .filter(record => record.word.length === 5)
+
+  // Find max frequency for normalization
+  const maxFreq = Math.max(...records.map(r => r.frequency))
 
   // Transform and sort records
   const wordList = records
     .map(record => ({
       word: record.word.toLowerCase(),
-      frequency: parseInt(record.frequency, 10)
+      frequency: maxFreq > 0 ? record.frequency / maxFreq : 0
     }))
     .sort((a, b) => b.frequency - a.frequency)
 
