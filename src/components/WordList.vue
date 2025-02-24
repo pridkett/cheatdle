@@ -5,7 +5,12 @@ import { computed } from 'vue'
 const store = useWordleStore()
 const tooManyMatches = computed(() => store.filteredWords.length >= 100)
 const sortedWords = computed(() => 
-  [...store.filteredWords].sort((a, b) => b.frequency - a.frequency)
+  [...store.filteredWords]
+    .sort((a, b) => b.frequency - a.frequency)
+    .map(word => ({
+      ...word,
+      formattedFreq: `${(word.frequency * 100).toFixed(1)}%`
+    }))
 )
 </script>
 
@@ -29,7 +34,7 @@ const sortedWords = computed(() =>
                text-gray-800 dark:text-gray-200 flex justify-between items-center"
       >
         <span class="font-mono">{{ word.word }}</span>
-        <span class="text-sm text-gray-500 dark:text-gray-400">{{ word.frequency }}</span>
+        <span class="text-sm text-gray-500 dark:text-gray-400">{{ word.formattedFreq }}</span>
       </div>
     </div>
   </div>
