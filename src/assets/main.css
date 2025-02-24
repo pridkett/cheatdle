@@ -13,14 +13,20 @@
   }
 
   .letter-cell-yellow {
-    @apply bg-yellow-300 border-yellow-400 [transform:rotateX(360deg)];
+    @apply bg-yellow-300 border-yellow-400 rotate-x-180;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
   }
 
   .letter-cell-green {
-    @apply bg-green-500 border-green-600 [transform:rotateX(360deg)];
+    @apply bg-green-500 border-green-600 rotate-x-180;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
   }
 
   .letter-cell-gray {
-    @apply bg-gray-400 border-gray-500 [transform:rotateX(360deg)];
+    @apply bg-gray-400 border-gray-500 rotate-x-180;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
   }
 }

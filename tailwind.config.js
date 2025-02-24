@@ -10,6 +10,9 @@ export default {
       transitionProperty: {
         'transform': 'transform',
       },
+      rotate: {
+        'x-180': 'rotateX(180deg)',
+      },
     },
   },
   plugins: [],
