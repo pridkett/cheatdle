@@ -119,8 +119,8 @@ export const useWordleStore = defineStore('wordle', () => {
   function addLetter(letter: string) {
     const currentRow = guesses.value[activeRowIndex.value]
     const emptyIndex = currentRow.findIndex(g => g.letter === '')
-    if (emptyIndex !== -1) {
-      currentRow[emptyIndex].letter = letter
+    if (emptyIndex !== -1 && emptyIndex < 5) {
+      currentRow[emptyIndex].letter = letter.toUpperCase()
     }
   }
 

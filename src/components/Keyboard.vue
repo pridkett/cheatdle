@@ -31,7 +31,7 @@ const handleKeyClick = (key: string) => {
         @click="handleKeyClick(key)"
         class="px-3 py-4 rounded bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 
                text-gray-800 dark:text-gray-200 font-semibold transition-colors
-               min-w-[2.5rem]"
+               min-w-[2.5rem] select-none"
         :class="{
           'px-4': key === 'ENTER' || key === '⌫'
         }"
