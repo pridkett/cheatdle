@@ -53,8 +53,8 @@ export const useWordleStore = defineStore('wordle', () => {
 
     // Process each row of guesses
     for (const row of guesses.value) {
-      // Skip empty rows
-      if (row.every(g => g.letter === '')) continue;
+      // Skip empty or incomplete rows
+      if (row.some(g => g.letter === '')) continue;
 
       // Process each letter in the row
       row.forEach((guess, pos) => {
@@ -156,10 +156,7 @@ export const useWordleStore = defineStore('wordle', () => {
       if (currentRow[i].letter !== '') {
         currentRow[i].letter = ''
         currentRow[i].color = 'gray'  // Reset color to gray
-        // If this makes the row empty, reprocess word list
-        if (currentRow.every(g => g.letter === '')) {
-          filterWordsBasedOnGuesses()
-        }
+        filterWordsBasedOnGuesses()  // Reprocess immediately when any letter is removed
         break
       }
     }
