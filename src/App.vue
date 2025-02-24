@@ -46,7 +46,10 @@ onMounted(() => {
     <HelpModal ref="helpModal" />
     <header class="py-6">
       <div class="container mx-auto px-4">
-        <div class="flex justify-end items-center">
+        <div class="flex justify-between items-center">
+          <h1 class="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 animate-title-shine tracking-tight transform hover:scale-105 transition-transform duration-200 cursor-default select-none" style="text-shadow: 3px 3px 6px rgba(0,0,0,0.2);">
+            CHEATDLE
+          </h1>
           <div class="flex gap-2">
             <button
               @click="toggleDark"
@@ -82,20 +85,6 @@ onMounted(() => {
             </aside>
           </div>
 
-          <nav class="mt-4 space-x-4 text-center">
-            <RouterLink
-              to="/"
-              class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
-            >
-              Home
-            </RouterLink>
-            <RouterLink
-              to="/about"
-              class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
-            >
-              About
-            </RouterLink>
-          </nav>
         </div>
       </div>
     </header>

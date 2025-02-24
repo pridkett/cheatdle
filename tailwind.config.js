@@ -14,7 +14,24 @@ export default {
         }
       },
       animation: {
-        'wobble': 'wobble 3s ease-in-out infinite'
+        'wobble': 'wobble 3s ease-in-out infinite',
+        'title-shine': 'title-shine 2s linear infinite'
+      },
+      keyframes: {
+        wobble: {
+          '0%, 100%': { transform: 'rotate(-20deg)' },
+          '50%': { transform: 'rotate(20deg)' }
+        },
+        'title-shine': {
+          '0%': {
+            'background-size': '200% 200%',
+            'background-position': 'left center'
+          },
+          '100%': {
+            'background-size': '200% 200%',
+            'background-position': 'right center'
+          }
+        }
       }
     },
   },
