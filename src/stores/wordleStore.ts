@@ -93,21 +93,25 @@ export const useWordleStore = defineStore('wordle', () => {
     const pattern = `^${positionPatterns.join('')}$`;
     const regex = new RegExp(pattern);
 
-    // Filter words based on all constraints
+    // Filter words based on regex and constraints
     filteredWords.value = wordlist.filter(entry => {
       const word = entry.word.toLowerCase();
       
-      // Check regex pattern match
+      // First check the regex pattern which handles position constraints
       if (!regex.test(word)) return false;
 
-      // Check must-contain letters
-      for (const letter of mustContain) {
-        if (!word.includes(letter)) return false;
+      // Then check if word contains all required letters
+      const mustContainPattern = Array.from(mustContain).join('|');
+      if (mustContainPattern) {
+        for (const letter of mustContain) {
+          if (!word.includes(letter)) return false;
+        }
       }
 
-      // Check must-not-contain letters
-      for (const letter of mustNotContain) {
-        if (word.includes(letter)) return false;
+      // Finally check if word contains any forbidden letters
+      const mustNotContainPattern = Array.from(mustNotContain).join('');
+      if (mustNotContainPattern && new RegExp(`[${mustNotContainPattern}]`).test(word)) {
+        return false;
       }
 
       return true;
