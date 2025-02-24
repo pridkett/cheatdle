@@ -66,8 +66,8 @@ onMounted(() => {
         </div>
 
         <div class="mt-6">
-          <div class="flex flex-col lg:grid lg:grid-cols-[1fr,400px] lg:gap-8">
-            <div class="flex flex-col items-center order-1 lg:order-none">
+          <div class="grid grid-cols-1 lg:grid-cols-[1fr,400px] gap-8">
+            <div class="flex flex-col items-center">
               <Board class="mb-8" />
               <Keyboard
                 class="mb-8 w-full max-w-2xl"
@@ -77,7 +77,7 @@ onMounted(() => {
               />
             </div>
 
-            <aside class="mb-8 lg:mb-0 order-2 lg:order-none">
+            <aside class="lg:mt-0">
               <WordList />
             </aside>
           </div>
