@@ -10,12 +10,16 @@ import type { ComponentPublicInstance } from 'vue'
 const helpModal = ref<ComponentPublicInstance<typeof HelpModal> | null>(null)
 import { useWordleStore } from './stores/wordleStore'
 
-const isDark = ref(false)
+const isDark = ref(document.documentElement.classList.contains('dark'))
 const store = useWordleStore()
 
 const toggleDark = () => {
   isDark.value = !isDark.value
-  document.documentElement.classList.toggle('dark')
+  if (isDark.value) {
+    document.documentElement.classList.add('dark')
+  } else {
+    document.documentElement.classList.remove('dark')
+  }
 }
 
 onMounted(() => {
