@@ -51,6 +51,7 @@ onUnmounted(() => {
         >
           {{ store.guesses[rowIndex]?.[colIndex]?.letter || '' }}
         </div>
+      </div>
     </div>
   </div>
 </template>
