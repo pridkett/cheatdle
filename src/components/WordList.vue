@@ -31,14 +31,14 @@ const sortedWords = computed(() => {
     <div v-else-if="store.filteredWords.length === 1" 
       class="flex flex-col items-center justify-center py-12 text-gray-600 dark:text-gray-400"
     >
-      <div class="text-6xl animate-wobble">🎉</div>
       <div 
-        class="mt-4 py-2 px-3 border-b last:border-0 border-gray-200 dark:border-gray-700
+        class="py-2 px-3 border-b border-gray-200 dark:border-gray-700
                text-gray-800 dark:text-gray-200 flex justify-between items-center w-full"
       >
         <span class="font-mono">{{ sortedWords[0].word }}</span>
         <span class="text-sm text-gray-500 dark:text-gray-400">{{ sortedWords[0].formattedFreq }}</span>
       </div>
+      <div class="text-6xl animate-wobble mt-8">🎉</div>
     </div>
     <div v-else-if="store.filteredWords.length === 0" 
       class="flex flex-col items-center justify-center py-12 text-gray-600 dark:text-gray-400"
