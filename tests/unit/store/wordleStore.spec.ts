@@ -105,16 +105,20 @@ describe('Wordle Store', () => {
     const store = useWordleStore()
     store.initializeGuesses()
     
-    // Add some letters and cycle colors
-    store.guesses[0][0].letter = 'T'
-    store.cycleColor(0, 0) // white -> yellow
-    
+    // Add some letters and set colors directly
+    store.guesses[0][0].letter = 'S'
+    store.guesses[0][0].color = 'yellow'
+    store.filterWordsBasedOnGuesses()
     const yellowCount = store.filteredWords.length
     
-    store.cycleColor(0, 0) // yellow -> green
+    store.guesses[0][0].color = 'green'
+    store.filterWordsBasedOnGuesses()
     const greenCount = store.filteredWords.length
     
     // Different constraints should yield different filtered sets
-    expect(yellowCount).not.toBe(greenCount)
+    // Yellow S means "contains S but not in first position"
+    // Green S means "must start with S"
+    // These should produce different word counts
+    expect(yellowCount).toBeGreaterThan(greenCount)
   })
 })
