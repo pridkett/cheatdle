@@ -4,14 +4,18 @@ import { computed } from 'vue'
 
 const store = useWordleStore()
 const tooManyMatches = computed(() => store.filteredWords.length >= 100)
-const sortedWords = computed(() => 
-  [...store.filteredWords]
-    .sort((a, b) => b.frequency - a.frequency)
-    .map(word => ({
-      ...word,
-      formattedFreq: `${(word.frequency * 100).toFixed(1)}%`
-    }))
-)
+const sortedWords = computed(() => {
+  const words = [...store.filteredWords].sort((a, b) => b.frequency - a.frequency)
+  
+  // Calculate sum of all frequencies
+  const totalFreq = words.reduce((sum, word) => sum + word.frequency, 0)
+  
+  // Normalize frequencies to sum to 100%
+  return words.map(word => ({
+    ...word,
+    formattedFreq: `${((word.frequency / totalFreq) * 100).toFixed(1)}%`
+  }))
+})
 </script>
 
 <template>
