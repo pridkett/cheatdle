@@ -10,19 +10,33 @@ import type { ComponentPublicInstance } from 'vue'
 const helpModal = ref<ComponentPublicInstance<typeof HelpModal> | null>(null)
 import { useWordleStore } from './stores/wordleStore'
 
-const isDark = ref(document.documentElement.classList.contains('dark'))
+// const isDark = ref(document.documentElement.classList.contains('dark'))
+const isDark = ref(false)
 const store = useWordleStore()
 
 const toggleDark = () => {
   isDark.value = !isDark.value
+  document.documentElement.classList.toggle('dark')
+  localStorage.setItem('theme', isDark.value ? 'dark' : 'light')
+}
+
+onMounted(() => {
+  // Check user preference in localStorage
+  const savedTheme = localStorage.getItem('theme')
+  if (savedTheme) {
+    isDark.value = savedTheme === 'dark'
+  } else {
+    // If no preference is saved, use system preference
+    isDark.value = window.matchMedia('(prefers-color-scheme: dark)').matches
+  }
+
+  // Apply the theme
   if (isDark.value) {
     document.documentElement.classList.add('dark')
   } else {
     document.documentElement.classList.remove('dark')
   }
-}
 
-onMounted(() => {
   store.initializeGuesses()
 })
 </script>
@@ -34,14 +48,14 @@ onMounted(() => {
       <div class="container mx-auto px-4">
         <div class="flex justify-end items-center">
           <div class="flex gap-2">
-            <button 
+            <button
               @click="toggleDark"
               class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600"
               title="Toggle dark mode"
             >
               {{ isDark ? '🌞' : '🌙' }}
             </button>
-            <button 
+            <button
               @click="helpModal?.toggle()"
               class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600"
               title="Help"
@@ -55,27 +69,27 @@ onMounted(() => {
           <div class="lg:grid lg:grid-cols-[1fr,300px] lg:gap-8">
             <div class="flex flex-col items-center">
               <Board class="mb-8" />
-              <Keyboard 
+              <Keyboard
                 class="mb-8 w-full max-w-2xl"
                 @key-press="(key) => store.addLetter(key)"
                 @enter-press="store.submitGuess"
                 @backspace-press="store.removeLetter"
               />
             </div>
-            
+
             <aside class="mb-8 lg:mb-0">
               <WordList />
             </aside>
           </div>
-          
+
           <nav class="mt-4 space-x-4 text-center">
-            <RouterLink 
+            <RouterLink
               to="/"
               class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
             >
               Home
             </RouterLink>
-            <RouterLink 
+            <RouterLink
               to="/about"
               class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
             >
