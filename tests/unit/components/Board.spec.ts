@@ -26,9 +26,10 @@ describe('Board', () => {
   it('displays letters from store', () => {
     const store = useWordleStore()
     store.guesses[0][0].letter = 'T'
-    store.guesses[0][1].letter = 'E'
-    store.guesses[0][2].letter = 'S'
-    store.guesses[0][3].letter = 'T'
+    store.guesses[0][1].letter = 'A'
+    store.guesses[0][2].letter = 'C'
+    store.guesses[0][3].letter = 'O'
+    store.guesses[0][4].letter = 'S'
     
     const wrapper = mount(Board)
     const firstRowCells = wrapper.findAll('.grid-rows-6 > div').at(0)?.findAll('.grid-cols-5 > div')
