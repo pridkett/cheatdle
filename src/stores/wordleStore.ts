@@ -19,7 +19,7 @@ export const useWordleStore = defineStore('wordle', () => {
   }
 
   function initializeGuesses() {
-    guesses.value = Array(6).fill(null).map(() => 
+    guesses.value = Array(6).fill(null).map(() =>
       Array(5).fill(null).map(() => ({
         letter: '',
         color: 'gray'
@@ -29,7 +29,7 @@ export const useWordleStore = defineStore('wordle', () => {
 
   function cycleColor(rowIndex: number, colIndex: number) {
     const currentColor = guesses.value[rowIndex][colIndex].color
-    const colors: GuessColor[] = ['gray', 'yellow', 'green', 'gray']
+    const colors: GuessColor[] = ['gray', 'yellow', 'green']
     const nextColorIndex = (colors.indexOf(currentColor) + 1) % colors.length
     guesses.value[rowIndex][colIndex].color = colors[nextColorIndex]
     updateConstraints()
@@ -39,7 +39,7 @@ export const useWordleStore = defineStore('wordle', () => {
     // Filter wordlist based on all guesses
     filteredWords.value = wordlist.filter(entry => {
       const word = entry.word.toLowerCase()
-      
+
       // Check against each row of guesses
       for (const row of guesses.value) {
         // Skip empty rows
