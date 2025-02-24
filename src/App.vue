@@ -1,14 +1,21 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
+import Board from './components/Board.vue'
+import { useWordleStore } from './stores/wordleStore'
 
 const isDark = ref(false)
+const store = useWordleStore()
 
 const toggleDark = () => {
   isDark.value = !isDark.value
   document.documentElement.classList.toggle('dark')
 }
+
+onMounted(() => {
+  store.initializeGuesses()
+})
 </script>
 
 <template>
@@ -27,8 +34,8 @@ const toggleDark = () => {
         </div>
 
         <div class="mt-6">
-          <HelloWorld msg="You did it!" />
-
+          <Board class="mb-8" />
+          
           <nav class="mt-4 space-x-4">
             <RouterLink 
               to="/"
