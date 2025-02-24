@@ -107,13 +107,21 @@ export const useWordleStore = defineStore('wordle', () => {
       const word = entry.word.toLowerCase();
       
       // Check the regex pattern which handles position and must-not-contain constraints
-      if (!regex.test(word)) return false;
+      const regexMatch = regex.test(word);
+      if (!regexMatch) {
+        console.log(`${word}: failed regex pattern ${pattern}`);
+        return false;
+      }
 
       // Check if word contains all required letters
       for (const letter of mustContain) {
-        if (!word.includes(letter)) return false;
+        if (!word.includes(letter)) {
+          console.log(`${word}: missing required letter ${letter}`);
+          return false;
+        }
       }
 
+      console.log(`${word}: PASSED all filters`);
       return true;
     });
   }
