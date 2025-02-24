@@ -1,3 +1,9 @@
+<script lang="ts">
+export default {
+  name: 'WordleBoard'
+}
+</script>
+
 <script setup lang="ts">
 import { useWordleStore } from '@/stores/wordleStore'
 import { onMounted, onUnmounted } from 'vue'
@@ -24,13 +30,13 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="grid grid-rows-6 gap-2 p-4 max-w-md mx-auto">
-    <div v-for="(row, rowIndex) in 6" :key="rowIndex" class="grid grid-cols-5 gap-2 justify-center">
-      <div 
-        v-for="(col, colIndex) in 5" 
+  <div class="flex flex-col gap-2 p-4 max-w-md mx-auto">
+    <div v-for="(row, rowIndex) in 6" :key="rowIndex" class="flex flex-row gap-2 justify-center">
+      <div
+        v-for="(col, colIndex) in 5"
         :key="colIndex"
         @click="store.cycleColor(rowIndex, colIndex)"
-        class="w-14 h-14 border-2 flex items-center justify-center text-2xl font-bold cursor-pointer 
+        class="w-14 h-14 border-2 flex items-center justify-center text-2xl font-bold cursor-pointer
                transition-all duration-500 transform perspective-500
                [transform-style:preserve-3d] select-none
                dark:text-white"
