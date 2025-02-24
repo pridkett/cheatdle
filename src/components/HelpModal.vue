@@ -15,17 +15,19 @@ defineExpose({ toggle, isOpen })
     <!-- Backdrop -->
     <div 
       v-if="isOpen"
-      class="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 transition-opacity"
-      @click="toggle"
+      class="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 transition-opacity z-40"
+      @click="isOpen = false"
     />
     
     <!-- Modal -->
     <div 
       v-if="isOpen"
-      class="fixed inset-x-0 top-0 transform transition-transform duration-300 ease-in-out"
-      :class="{ 'translate-y-0': isOpen, '-translate-y-full': !isOpen }"
+      class="fixed inset-0 flex items-center justify-center z-50"
     >
-      <div class="bg-white dark:bg-gray-800 mx-auto max-w-2xl rounded-b-lg shadow-xl p-6">
+      <div 
+        class="bg-white dark:bg-gray-800 mx-auto max-w-2xl rounded-lg shadow-xl p-6 animate-slide-down"
+        @click.stop
+      >
         <div class="flex justify-between items-center mb-4">
           <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100">How to Play</h2>
           <button 
