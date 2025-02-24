@@ -28,6 +28,10 @@ export const useWordleStore = defineStore('wordle', () => {
   }
 
   function cycleColor(rowIndex: number, colIndex: number) {
+    // Only allow color changes if there's a letter in the box
+    if (guesses.value[rowIndex][colIndex].letter === '') {
+      return
+    }
     const currentColor = guesses.value[rowIndex][colIndex].color
     const colors: GuessColor[] = ['gray', 'yellow', 'green']
     const nextColorIndex = (colors.indexOf(currentColor) + 1) % colors.length
@@ -140,6 +144,14 @@ export const useWordleStore = defineStore('wordle', () => {
 
   function removeLetter() {
     const currentRow = guesses.value[activeRowIndex.value]
+    // Check if current row is empty and we're not on the first row
+    if (currentRow.every(g => g.letter === '') && activeRowIndex.value > 0) {
+      // Move to previous row
+      activeRowIndex.value--
+      return
+    }
+    
+    // Remove letter from current row
     for (let i = currentRow.length - 1; i >= 0; i--) {
       if (currentRow[i].letter !== '') {
         currentRow[i].letter = ''
