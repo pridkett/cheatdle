@@ -155,6 +155,11 @@ export const useWordleStore = defineStore('wordle', () => {
     for (let i = currentRow.length - 1; i >= 0; i--) {
       if (currentRow[i].letter !== '') {
         currentRow[i].letter = ''
+        currentRow[i].color = 'gray'  // Reset color to gray
+        // If this makes the row empty, reprocess word list
+        if (currentRow.every(g => g.letter === '')) {
+          filterWordsBasedOnGuesses()
+        }
         break
       }
     }
