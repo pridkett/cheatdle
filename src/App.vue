@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
 import Board from './components/Board.vue'
 import Keyboard from './components/Keyboard.vue'
+import WordList from './components/WordList.vue'
 import { useWordleStore } from './stores/wordleStore'
 
 const isDark = ref(false)
@@ -33,16 +34,22 @@ onMounted(() => {
           </button>
         </div>
 
-        <div class="mt-6">
-          <Board class="mb-8" />
-          <Keyboard 
-            class="mb-8"
-            @key-press="(key) => store.addLetter(key)"
-            @enter-press="store.submitGuess"
-            @backspace-press="store.removeLetter"
-          />
+        <div class="mt-6 lg:grid lg:grid-cols-[1fr,300px] lg:gap-8">
+          <div>
+            <Board class="mb-8" />
+            <Keyboard 
+              class="mb-8"
+              @key-press="(key) => store.addLetter(key)"
+              @enter-press="store.submitGuess"
+              @backspace-press="store.removeLetter"
+            />
+          </div>
           
-          <nav class="mt-4 space-x-4">
+          <aside class="mb-8 lg:mb-0">
+            <WordList />
+          </aside>
+          
+          <nav class="mt-4 space-x-4 lg:col-span-2">
             <RouterLink 
               to="/"
               class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
