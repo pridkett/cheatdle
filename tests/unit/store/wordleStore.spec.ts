@@ -106,7 +106,7 @@ describe('Wordle Store', () => {
     store.initializeGuesses()
     
     // Add some letters and set colors directly
-    store.guesses[0][0].letter = 'S'
+    store.guesses[0][0].letter = 'A'
     store.guesses[0][0].color = 'yellow'
     store.filterWordsBasedOnGuesses()
     const yellowCount = store.filteredWords.length
@@ -116,9 +116,10 @@ describe('Wordle Store', () => {
     const greenCount = store.filteredWords.length
     
     // Different constraints should yield different filtered sets
-    // Yellow S means "contains S but not in first position"
-    // Green S means "must start with S"
+    // Yellow A means "contains A but not in first position"
+    // Green A means "must start with A"
     // These should produce different word counts
+    // Our word list has 'audio' starting with A, but 'trace', 'stare', 'raise' containing A elsewhere
     expect(yellowCount).toBeGreaterThan(greenCount)
   })
 })
