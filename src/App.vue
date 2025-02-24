@@ -24,7 +24,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
+  <div class="min-h-screen bg-white dark:bg-gray-900 transition-all duration-300">
     <HelpModal ref="helpModal" />
     <header class="py-6">
       <div class="container mx-auto px-4">

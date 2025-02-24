@@ -13,14 +13,9 @@
 }
 
 .letter-cell-white {
-  @apply bg-white;
-  @apply border-gray-300;
-  @apply text-gray-900;
-}
-
-.dark .letter-cell-white {
-  @apply border-gray-600;
-  @apply text-white;
+  @apply bg-white dark:bg-gray-800;
+  @apply border-gray-300 dark:border-gray-600;
+  @apply text-gray-900 dark:text-white;
 }
 
 .letter-cell-yellow {
