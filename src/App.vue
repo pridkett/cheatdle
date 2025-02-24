@@ -28,9 +28,7 @@ onMounted(() => {
     <HelpModal ref="helpModal" />
     <header class="py-6">
       <div class="container mx-auto px-4">
-        <div class="flex justify-between items-center">
-          <img alt="Vue logo" class="w-32 h-32" src="@/assets/logo.svg" />
-          
+        <div class="flex justify-end items-center">
           <div class="flex gap-2">
             <button 
               @click="toggleDark"
