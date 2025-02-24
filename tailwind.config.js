@@ -8,17 +8,7 @@ export default {
   theme: {
     extend: {
       keyframes: {
-        wobble: {
-          '0%, 100%': { transform: 'rotate(-20deg)' },
-          '50%': { transform: 'rotate(20deg)' }
-        }
-      },
-      animation: {
-        'wobble': 'wobble 3s ease-in-out infinite',
-        'title-shine': 'title-shine 2s linear infinite'
-      },
-      keyframes: {
-        wobble: {
+        'wobble': {
           '0%, 100%': { transform: 'rotate(-20deg)' },
           '50%': { transform: 'rotate(20deg)' }
         },
@@ -31,7 +21,16 @@ export default {
             'background-size': '200% 200%',
             'background-position': 'right center'
           }
+        },
+        'slide-down': {
+          '0%': { transform: 'translateY(-100%)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' }
         }
+      },
+      animation: {
+        'wobble': 'wobble 3s cubic-bezier(0.45, 0, 0.55, 1) infinite',
+        'title-shine': 'title-shine 2s linear infinite',
+        'slide-down': 'slide-down 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
       }
     },
   },
