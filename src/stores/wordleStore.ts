@@ -22,14 +22,14 @@ export const useWordleStore = defineStore('wordle', () => {
     guesses.value = Array(6).fill(null).map(() => 
       Array(5).fill(null).map(() => ({
         letter: '',
-        color: 'white'
+        color: 'gray'
       }))
     )
   }
 
   function cycleColor(rowIndex: number, colIndex: number) {
     const currentColor = guesses.value[rowIndex][colIndex].color
-    const colors: GuessColor[] = ['white', 'yellow', 'green', 'gray']
+    const colors: GuessColor[] = ['gray', 'yellow', 'green', 'gray']
     const nextColorIndex = (colors.indexOf(currentColor) + 1) % colors.length
     guesses.value[rowIndex][colIndex].color = colors[nextColorIndex]
     updateConstraints()
