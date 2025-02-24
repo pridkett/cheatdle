@@ -25,11 +25,38 @@ export const useWordleStore = defineStore('wordle', () => {
     )
   }
 
+  function addLetter(letter: string) {
+    const currentRow = guesses.value[activeRowIndex.value]
+    const emptyIndex = currentRow.findIndex(g => g.letter === '')
+    if (emptyIndex !== -1) {
+      currentRow[emptyIndex].letter = letter
+    }
+  }
+
+  function removeLetter() {
+    const currentRow = guesses.value[activeRowIndex.value]
+    for (let i = currentRow.length - 1; i >= 0; i--) {
+      if (currentRow[i].letter !== '') {
+        currentRow[i].letter = ''
+        break
+      }
+    }
+  }
+
+  function submitGuess() {
+    if (activeRowIndex.value < 5) {
+      activeRowIndex.value++
+    }
+  }
+
   return {
     activeRowIndex,
     guesses,
     filteredWords,
     setActiveRowIndex,
-    initializeGuesses
+    initializeGuesses,
+    addLetter,
+    removeLetter,
+    submitGuess
   }
 })

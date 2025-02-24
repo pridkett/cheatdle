@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
 import Board from './components/Board.vue'
+import Keyboard from './components/Keyboard.vue'
 import { useWordleStore } from './stores/wordleStore'
 
 const isDark = ref(false)
@@ -35,6 +35,12 @@ onMounted(() => {
 
         <div class="mt-6">
           <Board class="mb-8" />
+          <Keyboard 
+            class="mb-8"
+            @key-press="(key) => store.addLetter(key)"
+            @enter-press="store.submitGuess"
+            @backspace-press="store.removeLetter"
+          />
           
           <nav class="mt-4 space-x-4">
             <RouterLink 
