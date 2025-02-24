@@ -6,7 +6,17 @@ export default {
     './src/**/*.{vue,js,ts,jsx,tsx,css}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      keyframes: {
+        wobble: {
+          '0%, 100%': { transform: 'rotate(-20deg)' },
+          '50%': { transform: 'rotate(20deg)' }
+        }
+      },
+      animation: {
+        'wobble': 'wobble 3s ease-in-out infinite'
+      }
+    },
   },
   plugins: [],
 };

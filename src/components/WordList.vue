@@ -27,6 +27,12 @@ const sortedWords = computed(() => {
     <div v-if="tooManyMatches" class="text-gray-600 dark:text-gray-400">
       Too many matches to display ({{ store.filteredWords.length }} words)
     </div>
+    <div v-else-if="store.filteredWords.length === 0" 
+      class="flex flex-col items-center justify-center py-12 text-gray-600 dark:text-gray-400"
+    >
+      <div class="text-6xl animate-wobble">😢</div>
+      <div class="mt-4">No Words Match These Hints</div>
+    </div>
     <div 
       v-else 
       class="max-h-[60vh] overflow-y-auto"
