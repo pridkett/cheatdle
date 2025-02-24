@@ -5,6 +5,9 @@ import Board from './components/Board.vue'
 import Keyboard from './components/Keyboard.vue'
 import WordList from './components/WordList.vue'
 import HelpModal from './components/HelpModal.vue'
+import type { ComponentPublicInstance } from 'vue'
+
+const helpModal = ref<ComponentPublicInstance<typeof HelpModal> | null>(null)
 import { useWordleStore } from './stores/wordleStore'
 
 const isDark = ref(false)
@@ -37,7 +40,7 @@ onMounted(() => {
               {{ isDark ? '🌞' : '🌙' }}
             </button>
             <button 
-              @click="$refs.helpModal.toggle()"
+              @click="helpModal?.toggle()"
               class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600"
               title="Help"
             >
