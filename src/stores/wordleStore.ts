@@ -36,53 +36,82 @@ export const useWordleStore = defineStore('wordle', () => {
   }
 
   function filterWordsBasedOnGuesses() {
-    // Filter wordlist based on all guesses
-    filteredWords.value = wordlist.filter(entry => {
-      const word = entry.word.toLowerCase()
+    // Process all guesses to build constraints
+    const positions = Array(5).fill('.');  // Default pattern for each position
+    const mustContain = new Set<string>();  // Letters that must be in the word
+    const mustNotContain = new Set<string>();  // Letters that must not be in the word
+    const notInPosition = Array(5).fill(new Set<string>());  // Letters that can't be in specific positions
 
-      // Check against each row of guesses
-      for (const row of guesses.value) {
-        // Skip empty rows
-        if (row.every(g => g.letter === '')) continue
+    // Initialize notInPosition with new Sets
+    for (let i = 0; i < 5; i++) {
+      notInPosition[i] = new Set<string>();
+    }
 
-        // Only process rows that have some letters
-        if (row.some(g => g.letter !== '')) {
-          for (let i = 0; i < 5; i++) {
-            const guess = row[i]
-            if (!guess.letter) continue
+    // Process each row of guesses
+    for (const row of guesses.value) {
+      // Skip empty rows
+      if (row.every(g => g.letter === '')) continue;
 
-            const letter = guess.letter.toLowerCase()
-
-            switch (guess.color) {
-              case 'green':
-                // Letter must be in this exact position
-                if (word[i] !== letter) {
-                  return false
-                }
-                break
-
-              case 'yellow':
-                // Letter must exist somewhere, but not in this position
-                if (word[i] === letter) {
-                  return false
-                }
-                if (!word.includes(letter)) {
-                  return false
-                }
-                break
-
-              case 'gray':
-                // Letter should not appear in the word at all
-                if (word.includes(letter)) {
-                  return false
-                }
-                break
+      // Process each letter in the row
+      row.forEach((guess, pos) => {
+        if (!guess.letter) return;
+        
+        const letter = guess.letter.toLowerCase();
+        
+        switch (guess.color) {
+          case 'green':
+            positions[pos] = letter;  // Must be this letter in this position
+            mustContain.add(letter);  // Must contain this letter
+            break;
+          
+          case 'yellow':
+            notInPosition[pos].add(letter);  // Can't be this letter in this position
+            mustContain.add(letter);  // Must contain this letter somewhere
+            break;
+          
+          case 'gray':
+            // Only add to mustNotContain if it's not required by a green or yellow
+            if (!mustContain.has(letter)) {
+              mustNotContain.add(letter);
             }
-          }
+            break;
         }
+      });
+    }
+
+    // Build position patterns
+    const positionPatterns = positions.map((pos, i) => {
+      if (pos !== '.') {
+        return pos;  // Green letter - must be exactly this
       }
-      return true
-    })
+      // If we have letters that can't be in this position, exclude them
+      const excluded = Array.from(notInPosition[i]);
+      return excluded.length > 0 ? `[^${excluded.join('')}]` : '.';
+    });
+
+    // Build the complete regex pattern
+    const pattern = `^${positionPatterns.join('')}$`;
+    const regex = new RegExp(pattern);
+
+    // Filter words based on all constraints
+    filteredWords.value = wordlist.filter(entry => {
+      const word = entry.word.toLowerCase();
+      
+      // Check regex pattern match
+      if (!regex.test(word)) return false;
+
+      // Check must-contain letters
+      for (const letter of mustContain) {
+        if (!word.includes(letter)) return false;
+      }
+
+      // Check must-not-contain letters
+      for (const letter of mustNotContain) {
+        if (word.includes(letter)) return false;
+      }
+
+      return true;
+    });
   }
 
   function updateConstraints() {
