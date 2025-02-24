@@ -3,7 +3,7 @@ import { useWordleStore } from '@/stores/wordleStore'
 import { computed } from 'vue'
 
 const store = useWordleStore()
-const tooManyMatches = computed(() => store.filteredWords.length >= 100)
+const tooManyMatches = computed(() => store.filteredWords.length > 500)
 const sortedWords = computed(() => {
   const words = [...store.filteredWords].sort((a, b) => b.frequency - a.frequency)
   
@@ -21,11 +21,11 @@ const sortedWords = computed(() => {
 <template>
   <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4">
     <h2 class="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200">
-      Possible Words
+      {{ store.filteredWords.length > 0 ? `${store.filteredWords.length} Possible Words` : '' }}
     </h2>
     
     <div v-if="tooManyMatches" class="text-gray-600 dark:text-gray-400">
-      Too many matches to display ({{ store.filteredWords.length }} words)
+      Too Many To List - Keep Guessing
     </div>
     <div v-else-if="store.filteredWords.length === 0" 
       class="flex flex-col items-center justify-center py-12 text-gray-600 dark:text-gray-400"
