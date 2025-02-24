@@ -4,6 +4,7 @@ import { RouterLink, RouterView } from 'vue-router'
 import Board from './components/Board.vue'
 import Keyboard from './components/Keyboard.vue'
 import WordList from './components/WordList.vue'
+import HelpModal from './components/HelpModal.vue'
 import { useWordleStore } from './stores/wordleStore'
 
 const isDark = ref(false)
@@ -21,17 +22,28 @@ onMounted(() => {
 
 <template>
   <div class="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
+    <HelpModal ref="helpModal" />
     <header class="py-6">
       <div class="container mx-auto px-4">
         <div class="flex justify-between items-center">
           <img alt="Vue logo" class="w-32 h-32" src="@/assets/logo.svg" />
           
-          <button 
-            @click="toggleDark"
-            class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600"
-          >
-            {{ isDark ? '🌞' : '🌙' }}
-          </button>
+          <div class="flex gap-2">
+            <button 
+              @click="toggleDark"
+              class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600"
+              title="Toggle dark mode"
+            >
+              {{ isDark ? '🌞' : '🌙' }}
+            </button>
+            <button 
+              @click="$refs.helpModal.toggle()"
+              class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600"
+              title="Help"
+            >
+              ❔
+            </button>
+          </div>
         </div>
 
         <div class="mt-6 lg:grid lg:grid-cols-[1fr,300px] lg:gap-8">
