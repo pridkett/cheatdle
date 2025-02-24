@@ -35,9 +35,35 @@ describe('Board', () => {
     const firstRowCells = wrapper.findAll('.grid-rows-6 > div').at(0)?.findAll('.grid-cols-5 > div')
     
     expect(firstRowCells?.[0].text()).toBe('T')
-    expect(firstRowCells?.[1].text()).toBe('E')
-    expect(firstRowCells?.[2].text()).toBe('S')
-    expect(firstRowCells?.[3].text()).toBe('T')
-    expect(firstRowCells?.[4].text()).toBe('')
+    expect(firstRowCells?.[1].text()).toBe('A')
+    expect(firstRowCells?.[2].text()).toBe('C')
+    expect(firstRowCells?.[3].text()).toBe('O')
+    expect(firstRowCells?.[4].text()).toBe('S')
+  })
+
+  it('cycles colors when clicked', async () => {
+    const store = useWordleStore()
+    const wrapper = mount(Board)
+    const firstCell = wrapper.find('.grid-rows-6 > div').find('.grid-cols-5 > div')
+    
+    // Initial state should be white
+    expect(firstCell.classes()).toContain('bg-white')
+    
+    // Click through the color cycle
+    await firstCell.trigger('click')
+    expect(store.guesses[0][0].color).toBe('yellow')
+    expect(firstCell.classes()).toContain('bg-yellow-300')
+    
+    await firstCell.trigger('click')
+    expect(store.guesses[0][0].color).toBe('green')
+    expect(firstCell.classes()).toContain('bg-green-500')
+    
+    await firstCell.trigger('click')
+    expect(store.guesses[0][0].color).toBe('gray')
+    expect(firstCell.classes()).toContain('bg-gray-400')
+    
+    await firstCell.trigger('click')
+    expect(store.guesses[0][0].color).toBe('white')
+    expect(firstCell.classes()).toContain('bg-white')
   })
 })

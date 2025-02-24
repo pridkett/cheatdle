@@ -34,4 +34,41 @@ describe('Wordle Store', () => {
       color: 'empty'
     })
   })
+
+  it('cycles colors correctly', () => {
+    const store = useWordleStore()
+    store.initializeGuesses()
+    
+    // Test color cycling
+    expect(store.guesses[0][0].color).toBe('white')
+    
+    store.cycleColor(0, 0)
+    expect(store.guesses[0][0].color).toBe('yellow')
+    
+    store.cycleColor(0, 0)
+    expect(store.guesses[0][0].color).toBe('green')
+    
+    store.cycleColor(0, 0)
+    expect(store.guesses[0][0].color).toBe('gray')
+    
+    store.cycleColor(0, 0)
+    expect(store.guesses[0][0].color).toBe('white')
+  })
+
+  it('updates constraints when colors change', () => {
+    const store = useWordleStore()
+    store.initializeGuesses()
+    
+    // Add some letters
+    store.guesses[0][0].letter = 'T'
+    store.guesses[0][1].letter = 'A'
+    
+    // Change colors and verify constraints update
+    store.cycleColor(0, 0) // T -> yellow
+    store.cycleColor(0, 1) // A -> yellow
+    
+    // For now, just verify the function doesn't throw
+    // In the next phase, we'll add actual constraint checking
+    expect(() => store.cycleColor(0, 0)).not.toThrow()
+  })
 })

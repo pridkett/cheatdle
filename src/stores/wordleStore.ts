@@ -2,9 +2,11 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import wordlist from '../generatedWordlist'
 
+export type GuessColor = 'white' | 'yellow' | 'green' | 'gray'
+
 export interface LetterGuess {
   letter: string
-  color: 'grey' | 'yellow' | 'green' | 'empty'
+  color: GuessColor
 }
 
 export const useWordleStore = defineStore('wordle', () => {
@@ -20,9 +22,32 @@ export const useWordleStore = defineStore('wordle', () => {
     guesses.value = Array(6).fill(null).map(() => 
       Array(5).fill(null).map(() => ({
         letter: '',
-        color: 'empty'
+        color: 'white'
       }))
     )
+  }
+
+  function cycleColor(rowIndex: number, colIndex: number) {
+    const currentColor = guesses.value[rowIndex][colIndex].color
+    const colors: GuessColor[] = ['white', 'yellow', 'green', 'gray']
+    const nextColorIndex = (colors.indexOf(currentColor) + 1) % colors.length
+    guesses.value[rowIndex][colIndex].color = colors[nextColorIndex]
+    updateConstraints()
+  }
+
+  function updateConstraints() {
+    // Placeholder for constraint logic
+    // This will be expanded in the next implementation phase
+    const currentGuess = guesses.value[activeRowIndex.value]
+    const letterCounts = new Map<string, number>()
+    
+    // Count letters marked as green or yellow
+    currentGuess.forEach(guess => {
+      if (guess.color === 'green' || guess.color === 'yellow') {
+        const count = letterCounts.get(guess.letter) || 0
+        letterCounts.set(guess.letter, count + 1)
+      }
+    })
   }
 
   function addLetter(letter: string) {
@@ -57,6 +82,7 @@ export const useWordleStore = defineStore('wordle', () => {
     initializeGuesses,
     addLetter,
     removeLetter,
-    submitGuess
+    submitGuess,
+    cycleColor
   }
 })
