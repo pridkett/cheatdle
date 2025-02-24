@@ -151,6 +151,7 @@ export const useWordleStore = defineStore('wordle', () => {
   function submitGuess() {
     if (activeRowIndex.value < 5) {
       activeRowIndex.value++
+      filterWordsBasedOnGuesses()
     }
   }
 
