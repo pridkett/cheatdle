@@ -10,16 +10,19 @@ import type { ComponentPublicInstance } from 'vue'
 const helpModal = ref<ComponentPublicInstance<typeof HelpModal> | null>(null)
 import { useWordleStore } from './stores/wordleStore'
 
-const isDark = ref(false)
+const isDark = ref(localStorage.getItem('darkMode') === 'true')
 const store = useWordleStore()
 
 const toggleDark = () => {
   isDark.value = !isDark.value
-  document.documentElement.classList.toggle('dark')
+  localStorage.setItem('darkMode', isDark.value.toString())
+  document.documentElement.classList.toggle('dark', isDark.value)
 }
 
 onMounted(() => {
   store.initializeGuesses()
+  // Initialize dark mode from localStorage
+  document.documentElement.classList.toggle('dark', isDark.value)
 })
 </script>
 
