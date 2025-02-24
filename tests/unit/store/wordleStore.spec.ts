@@ -31,7 +31,7 @@ describe('Wordle Store', () => {
     const firstLetter = store.guesses[0][0]
     expect(firstLetter).toEqual({
       letter: '',
-      color: 'empty'
+      color: 'white'
     })
   })
 

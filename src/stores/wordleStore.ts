@@ -149,6 +149,7 @@ export const useWordleStore = defineStore('wordle', () => {
     addLetter,
     removeLetter,
     submitGuess,
-    cycleColor
+    cycleColor,
+    filterWordsBasedOnGuesses
   }
 })
