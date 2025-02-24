@@ -42,15 +42,15 @@ onUnmounted(() => {
                  transition-all duration-500 transform perspective-500
                  [transform-style:preserve-3d] select-none
                  dark:text-white"
-        :class="{
-          'bg-white border-gray-300 dark:border-gray-600': store.guesses[rowIndex]?.[colIndex]?.color === 'white',
-          'bg-yellow-300 border-yellow-400 [transform:rotateX(360deg)]': store.guesses[rowIndex]?.[colIndex]?.color === 'yellow',
-          'bg-green-500 border-green-600 [transform:rotateX(360deg)]': store.guesses[rowIndex]?.[colIndex]?.color === 'green',
-          'bg-gray-400 border-gray-500 [transform:rotateX(360deg)]': store.guesses[rowIndex]?.[colIndex]?.color === 'gray'
-        }"
-      >
-        {{ store.guesses[rowIndex]?.[colIndex]?.letter || '' }}
-      </div>
+          :class="{
+            'bg-white border-gray-300 dark:border-gray-600': store.guesses[rowIndex]?.[colIndex]?.color === 'white',
+            'bg-yellow-300 border-yellow-400 [transform:rotateX(360deg)]': store.guesses[rowIndex]?.[colIndex]?.color === 'yellow',
+            'bg-green-500 border-green-600 [transform:rotateX(360deg)]': store.guesses[rowIndex]?.[colIndex]?.color === 'green',
+            'bg-gray-400 border-gray-500 [transform:rotateX(360deg)]': store.guesses[rowIndex]?.[colIndex]?.color === 'gray'
+          }"
+        >
+          {{ store.guesses[rowIndex]?.[colIndex]?.letter || '' }}
+        </div>
     </div>
   </div>
 </template>
