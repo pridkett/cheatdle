@@ -47,22 +47,24 @@ onMounted(() => {
           </div>
         </div>
 
-        <div class="mt-6 lg:grid lg:grid-cols-[1fr,300px] lg:gap-8">
-          <div>
-            <Board class="mb-8" />
-            <Keyboard 
-              class="mb-8"
-              @key-press="(key) => store.addLetter(key)"
-              @enter-press="store.submitGuess"
-              @backspace-press="store.removeLetter"
-            />
+        <div class="mt-6">
+          <div class="lg:grid lg:grid-cols-[1fr,300px] lg:gap-8">
+            <div class="flex flex-col items-center">
+              <Board class="mb-8" />
+              <Keyboard 
+                class="mb-8 w-full max-w-2xl"
+                @key-press="(key) => store.addLetter(key)"
+                @enter-press="store.submitGuess"
+                @backspace-press="store.removeLetter"
+              />
+            </div>
+            
+            <aside class="mb-8 lg:mb-0">
+              <WordList />
+            </aside>
           </div>
           
-          <aside class="mb-8 lg:mb-0">
-            <WordList />
-          </aside>
-          
-          <nav class="mt-4 space-x-4 lg:col-span-2">
+          <nav class="mt-4 space-x-4 text-center">
             <RouterLink 
               to="/"
               class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
