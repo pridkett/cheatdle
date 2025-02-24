@@ -36,78 +36,51 @@ export const useWordleStore = defineStore('wordle', () => {
   }
 
   function filterWordsBasedOnGuesses() {
-    const constraints = {
-      exact: new Array(5).fill(''),  // Green positions
-      excluded: new Array(5).fill(''), // Yellow positions (letter can't be here)
-      required: new Map<string, number>(), // Minimum count of each letter
-      forbidden: new Set<string>(), // Letters that can't appear more than required
-    }
-
-    // Analyze all guesses to build constraints
-    guesses.value.forEach(row => {
-      const letterCounts = new Map<string, number>()
-      
-      // First pass: count letters and handle green positions
-      row.forEach((guess, pos) => {
-        if (guess.letter) {
-          letterCounts.set(guess.letter, (letterCounts.get(guess.letter) || 0) + 1)
-          if (guess.color === 'green') {
-            constraints.exact[pos] = guess.letter
-            const count = constraints.required.get(guess.letter) || 0
-            constraints.required.set(guess.letter, Math.max(count, letterCounts.get(guess.letter) || 0))
-          }
-        }
-      })
-
-      // Second pass: handle yellow and gray
-      row.forEach((guess, pos) => {
-        if (guess.letter) {
-          if (guess.color === 'yellow') {
-            constraints.excluded[pos] = guess.letter
-            const count = constraints.required.get(guess.letter) || 0
-            constraints.required.set(guess.letter, Math.max(count, letterCounts.get(guess.letter) || 0))
-          } else if (guess.color === 'gray') {
-            // Only mark as forbidden if not required by green/yellow
-            if (!constraints.required.has(guess.letter)) {
-              constraints.forbidden.add(guess.letter)
-            }
-          }
-        }
-      })
-    })
-
-    // Filter wordlist based on constraints
+    // Filter wordlist based on all guesses
     filteredWords.value = wordlist.filter(entry => {
       const word = entry.word.toLowerCase()
       
-      // Check exact positions (green)
-      for (let i = 0; i < 5; i++) {
-        if (constraints.exact[i] && word[i] !== constraints.exact[i]) {
-          return false
+      // Check against each row of guesses
+      for (const row of guesses.value) {
+        // Skip empty rows
+        if (row.every(g => g.letter === '')) continue
+
+        // Only process rows that have some letters
+        if (row.some(g => g.letter !== '')) {
+          for (let i = 0; i < 5; i++) {
+            const guess = row[i]
+            if (!guess.letter) continue
+
+            const letter = guess.letter.toLowerCase()
+
+            switch (guess.color) {
+              case 'green':
+                // Letter must be in this exact position
+                if (word[i] !== letter) {
+                  return false
+                }
+                break
+
+              case 'yellow':
+                // Letter must exist somewhere, but not in this position
+                if (word[i] === letter) {
+                  return false
+                }
+                if (!word.includes(letter)) {
+                  return false
+                }
+                break
+
+              case 'gray':
+                // Letter should not appear in the word at all
+                if (word.includes(letter)) {
+                  return false
+                }
+                break
+            }
+          }
         }
       }
-
-      // Check excluded positions (yellow)
-      for (let i = 0; i < 5; i++) {
-        if (constraints.excluded[i] && word[i] === constraints.excluded[i]) {
-          return false
-        }
-      }
-
-      // Check required letters and their counts
-      for (const [letter, count] of constraints.required) {
-        if ((word.match(new RegExp(letter, 'g')) || []).length < count) {
-          return false
-        }
-      }
-
-      // Check forbidden letters
-      for (const letter of constraints.forbidden) {
-        if (word.includes(letter)) {
-          return false
-        }
-      }
-
       return true
     })
   }
