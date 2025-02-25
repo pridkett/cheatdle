@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import Board from './components/Board.vue'
 import Keyboard from './components/Keyboard.vue'
 import WordList from './components/WordList.vue'
@@ -10,11 +10,19 @@ const helpModal = ref<ComponentPublicInstance<typeof HelpModal> | null>(null)
 import { useWordleStore } from './stores/wordleStore'
 
 const store = useWordleStore()
-store.initializeGuesses()
+
+onMounted(() => {
+  // Check system preference for dark mode
+  if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    document.documentElement.classList.add('dark')
+  }
+  
+  store.initializeGuesses()
+})
 </script>
 
 <template>
-  <div class="min-h-screen bg-white">
+  <div class="min-h-screen bg-white dark:bg-gray-900">
     <HelpModal ref="helpModal" />
     <header class="py-6 relative">
       <button
