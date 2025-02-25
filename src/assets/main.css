@@ -15,8 +15,9 @@ body {
 
 
 .letter-cell {
-  @apply w-12 h-12 sm:w-14 sm:h-14;
+  @apply w-[52px] h-[52px] sm:w-14 sm:h-14;
   @apply border border-gray-300;
+  @apply text-xl sm:text-2xl;
   @apply flex items-center justify-center;
   @apply text-2xl font-bold dark:text-white;
   @apply cursor-pointer;
