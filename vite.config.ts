@@ -18,5 +18,5 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
   },
-
+  base: '', // make everything relative
 })
