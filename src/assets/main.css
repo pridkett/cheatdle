@@ -47,3 +47,29 @@ body {
   @apply border-gray-800;
   @apply text-white;
 }
+
+@theme {  
+  --animate-wiggle: wiggle 3s ease-in-out infinite; 
+  @keyframes wiggle {    
+    0%,    100% {      transform: rotate(-15deg);    }   
+    50% {      transform: rotate(15deg);    }  
+  }
+
+  --animate-title-shine: title-shine 4s ease-in-out infinite;
+  @keyframes title-shine {
+    0%, 100% {
+      background-size: 200% 200%;
+      background-position: 0% 50%;
+    }
+    50% {
+      background-size: 200% 200%;
+      background-position: 100% 50%;
+    }
+  }
+
+  --animate-glow: glow 1.5s infinite;
+  @keyframes glow {
+      0%, 100% { boxShadow: 0 0 10px #ff00ff; }
+      50% { boxShadow: 10px 0 20px #ffffff; }
+  }
+}

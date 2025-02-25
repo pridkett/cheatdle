@@ -7,12 +7,12 @@ const __dirname = dirname(__filename)
 const projectRoot = join(__dirname, '..')
 
 // Get input filename from command line args, default to google-words.txt
-const inputFile = process.argv[2] || 'google-words.txt'
+const inputFile = process.argv[2] || 'words.txt'
 
 try {
   // Read the input file
   const content = readFileSync(join(projectRoot, inputFile), 'utf-8')
-  
+
   // Parse the file content (assuming space/tab separated values)
   const records = content
     .split('\n')

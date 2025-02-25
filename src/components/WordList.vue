@@ -38,13 +38,13 @@ const sortedWords = computed(() => {
         <span class="font-mono">{{ sortedWords[0].word }}</span>
         <span class="text-sm text-gray-500 dark:text-gray-400">{{ sortedWords[0].formattedFreq }}</span>
       </div>
-      <div class="text-6xl animate-wobble animate-glow mt-8" style="transform-origin: center center">🎉</div>
+      <div class="text-6xl animate-wiggle mt-8" style="transform-origin: center center">🎉</div>
     </div>
     <div v-else-if="store.filteredWords.length === 0"
       class="flex flex-col items-center justify-center py-12 text-gray-600 dark:text-gray-400"
     >
-      <div class="text-6xl animate-wobble animate-glow" style="transform-origin: center center">😢</div>
-      <div class="mt-4">No Words Match These Hints</div>
+      <div class="text-6xl animate-wiggle" style="transform-origin: center center">😢</div>
+      <div class="mt-4 animate-glow">No Words Match These Hints</div>
     </div>
     <div
       v-else

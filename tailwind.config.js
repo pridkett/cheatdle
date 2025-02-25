@@ -5,43 +5,6 @@ export default {
     './index.html',
     './src/**/*.{vue,js,ts,jsx,tsx,css}',
   ],
-  theme: {
-    extend: {
-      keyframes: {
-        wobble: {
-          '0%': { transform: 'rotate(-20deg)' },
-          '25%': { transform: 'rotate(0deg)' },
-          '50%': { transform: 'rotate(20deg)' },
-          '75%': { transform: 'rotate(0deg)' },
-          '100%': { transform: 'rotate(-20deg)' }
-        },
-        'title-shine': {
-          '0%': {
-            'background-size': '200% 200%',
-            'background-position': 'left center'
-          },
-          '100%': {
-            'background-size': '200% 200%',
-            'background-position': 'right center'
-          }
-        },
-        'slide-down': {
-          '0%': { transform: 'translateY(-100%)', opacity: '0' },
-          '100%': { transform: 'translateY(0)', opacity: '1' }
-        },
-        glow: {
-          '0%, 100%': { boxShadow: '0 0 10px #ff00ff' },
-          '50%': { boxShadow: '0 0 20px #ff00ff' },
-        },
-      },
-      animation: {
-        'wobble': 'wobble 3s ease-in-out infinite',
-        'title-shine': 'title-shine 2s linear infinite',
-        'slide-down': 'slide-down 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
-        'glow': 'glow 1.5s infinite'
-      }
-    },
-  },
   plugins: [],
 };
 

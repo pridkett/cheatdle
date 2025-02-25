@@ -46,7 +46,7 @@ onMounted(() => {
     <header class="py-6">
       <div class="container mx-auto px-4">
         <div class="flex flex-col items-center gap-4">
-          <h1 class="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 animate-title-shine tracking-tight transform hover:scale-105 transition-transform duration-200 cursor-default select-none" style="text-shadow: 3px 3px 6px rgba(0,0,0,0.2);">
+          <h1 class="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 animate-title-shine tracking-tight transform hover:scale-110 transition-transform duration-200 cursor-default select-none" style="text-shadow: 3px 3px 6px rgba(0,0,0,0.2);">
             CHEATDLE
           </h1>
           <div class="flex gap-2">

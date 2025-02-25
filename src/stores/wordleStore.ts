@@ -59,20 +59,20 @@ export const useWordleStore = defineStore('wordle', () => {
       // Process each letter in the row
       row.forEach((guess, pos) => {
         if (!guess.letter) return;
-        
+
         const letter = guess.letter.toLowerCase();
-        
+
         switch (guess.color) {
           case 'green':
             positions[pos] = letter;  // Must be this letter in this position
             mustContain.add(letter);  // Must contain this letter
             break;
-          
+
           case 'yellow':
             notInPosition[pos].add(letter);  // Can't be this letter in this position
             mustContain.add(letter);  // Must contain this letter somewhere
             break;
-          
+
           case 'gray':
             // Only add to mustNotContain if it's not required by a green or yellow
             if (!mustContain.has(letter)) {
@@ -101,15 +101,15 @@ export const useWordleStore = defineStore('wordle', () => {
     const regex = new RegExp(pattern);
 
     // Debug logging
-    console.log('Position patterns:', positionPatterns);
-    console.log('Must contain letters:', Array.from(mustContain));
-    console.log('Must not contain letters:', Array.from(mustNotContain));
-    console.log('Final regex pattern:', pattern);
+    // console.log('Position patterns:', positionPatterns);
+    // console.log('Must contain letters:', Array.from(mustContain));
+    // console.log('Must not contain letters:', Array.from(mustNotContain));
+    // console.log('Final regex pattern:', pattern);
 
     // Filter words based on regex and must-contain constraints
     filteredWords.value = wordlist.filter(entry => {
       const word = entry.word.toLowerCase();
-      
+
       // Check the regex pattern which handles position and must-not-contain constraints
       const regexMatch = regex.test(word);
       if (!regexMatch) {
@@ -150,7 +150,7 @@ export const useWordleStore = defineStore('wordle', () => {
       activeRowIndex.value--
       return
     }
-    
+
     // Remove letter from current row
     for (let i = currentRow.length - 1; i >= 0; i--) {
       if (currentRow[i].letter !== '') {
