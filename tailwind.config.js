@@ -13,7 +13,7 @@ export default {
           '25%': { transform: 'rotate(0deg)' },
           '50%': { transform: 'rotate(20deg)' },
           '75%': { transform: 'rotate(0deg)' },
-          '100%': { transform: 'rotate(-20deg)' },
+          '100%': { transform: 'rotate(-20deg)' }
         },
         'title-shine': {
           '0%': {
@@ -21,7 +21,7 @@ export default {
             'background-position': 'left center'
           },
           '100%': {
-            'background-size': '100% 100%',
+            'background-size': '200% 200%',
             'background-position': 'right center'
           }
         },
@@ -35,11 +35,10 @@ export default {
         },
       },
       animation: {
-        wobble: 'wobble 3s ease-in-out infinite',
-        // 'wobble': 'wobble 3s cubic-bezier(0.45, 0, 0.55, 1) infinite',
+        'wobble': 'wobble 3s ease-in-out infinite',
         'title-shine': 'title-shine 2s linear infinite',
         'slide-down': 'slide-down 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
-        glow: 'glow 1.5s infinite',
+        'glow': 'glow 1.5s infinite'
       }
     },
   },
