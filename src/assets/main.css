@@ -1,12 +1,24 @@
+@import "tailwindcss";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+/* Ensure global dark mode styles apply
+body {
+  @apply bg-white text-black transition-colors duration-300;
+}
+
+.dark body {
+  @apply bg-gray-900 text-white;
+} */
+
 
 .letter-cell {
   @apply w-14 h-14;
   @apply border-2 border-gray-300;
   @apply flex items-center justify-center;
-  @apply text-2xl font-bold;
+  @apply text-2xl font-bold dark:text-white;
   @apply cursor-pointer;
   @apply transition-all duration-500;
   @apply select-none;

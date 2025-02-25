@@ -1,7 +1,8 @@
 export default {
   plugins: {
-    'tailwindcss/nesting': {},
-    tailwindcss: {},
+    'postcss-nesting': {}, // Keep if you use nested styles
+    '@tailwindcss/postcss': {}, // ✅ Required based on your Tailwind version
     autoprefixer: {},
   },
-}
+};
+
