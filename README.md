@@ -4,6 +4,10 @@ Patrick Wagstrom
 
 February 2025
 
+## DEMO SITE
+
+If you're impatient and just want to play, you can find this tool running at [https://patrick.wagstrom.net/cheatdle](https://patrick.wagstrom.net/cheatdle).
+
 ## Overview
 
 Do you suck at [that five letter word guessing game](https://www.nytimes.com/games/wordle/index.html) from the Grey Lady? Do you want a little help, but not to go so far as just searching for today's answer. You're in luck, that's why I created Cheatdle.
