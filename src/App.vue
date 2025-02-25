@@ -67,7 +67,7 @@ onMounted(() => {
           </div>
         </div>
 
-        <div class="mt-6">
+        <div class="mt-6 flex justify-center">
           <div class="flex flex-col lg:flex-row items-start gap-8 justify-center">
             <div class="flex flex-col items-center">
               <Board class="mb-8" />
