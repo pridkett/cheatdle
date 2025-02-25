@@ -29,9 +29,9 @@ const handleKeyClick = (key: string) => {
         v-for="key in row"
         :key="key"
         @click="handleKeyClick(key)"
-        class="px-3 py-4 rounded bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 
+        class="px-2 py-3 sm:px-3 sm:py-4 rounded bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 
                text-gray-800 dark:text-gray-200 font-semibold transition-colors
-               min-w-[2.5rem] select-none"
+               text-sm sm:text-base min-w-[2rem] sm:min-w-[2.5rem] select-none"
         :class="{
           'px-4': key === 'ENTER' || key === '⌫'
         }"
