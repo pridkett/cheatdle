@@ -88,6 +88,27 @@ describe('Wordle Store', () => {
     })).toBe(true)
   })
 
+  it('enforces exact letter count when letter appears as both colored and gray', () => {
+    const store = useWordleStore()
+    store.initializeGuesses()
+    
+    // Set up a guess with three E's - one green, one yellow, one gray
+    // This should mean words must have exactly two E's
+    store.guesses[0][0].letter = 'E'
+    store.guesses[0][0].color = 'green'
+    store.guesses[0][2].letter = 'E'
+    store.guesses[0][2].color = 'yellow'
+    store.guesses[0][4].letter = 'E'
+    store.guesses[0][4].color = 'gray'
+    store.filterWordsBasedOnGuesses()
+    
+    // Words must have exactly two E's
+    expect(store.filteredWords.every(word => {
+      const eCount = (word.word.match(/e/g) || []).length
+      return eCount === 2 && word.word[0] === 'e' && word.word[2] !== 'e'
+    })).toBe(true)
+  })
+
   it('handles all gray repeated letters correctly', () => {
     const store = useWordleStore()
     store.initializeGuesses()

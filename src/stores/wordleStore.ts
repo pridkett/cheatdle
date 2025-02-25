@@ -59,15 +59,28 @@ export const useWordleStore = defineStore('wordle', () => {
       // Skip empty or incomplete rows
       if (row.some(g => g.letter === '')) continue;
 
-      // First pass: count non-gray occurrences of each letter
-      const rowLetterCounts = new Map<string, number>();
+      // First pass: identify letters that have both colored and gray instances
+      const mixedLetters = new Map<string, number>();
+      const letterHasGray = new Set<string>();
+      const letterHasColor = new Set<string>();
+      
       row.forEach((guess) => {
         if (!guess.letter) return;
         const letter = guess.letter.toLowerCase();
-        if (guess.color !== 'gray') {
-          rowLetterCounts.set(letter, (rowLetterCounts.get(letter) || 0) + 1);
+        if (guess.color === 'gray') {
+          letterHasGray.add(letter);
+        } else {
+          letterHasColor.add(letter);
+          mixedLetters.set(letter, (mixedLetters.get(letter) || 0) + 1);
         }
       });
+
+      // Keep only counts for letters that have both colored and gray instances
+      for (const letter of mixedLetters.keys()) {
+        if (!letterHasGray.has(letter)) {
+          mixedLetters.delete(letter);
+        }
+      }
 
       // Process each letter in the row
       row.forEach((guess, pos) => {
@@ -79,19 +92,21 @@ export const useWordleStore = defineStore('wordle', () => {
         switch (guess.color) {
           case 'green':
             positions[pos] = letter;  // Must be this letter in this position
-            letterCounts.set(letter, requiredCount);  // Update required count
+            if (mixedLetters.has(letter)) {
+              letterCounts.set(letter, mixedLetters.get(letter)!);
+            }
             break;
 
           case 'yellow':
             notInPosition[pos].add(letter);  // Can't be this letter in this position
-            letterCounts.set(letter, requiredCount);  // Update required count
+            if (mixedLetters.has(letter)) {
+              letterCounts.set(letter, mixedLetters.get(letter)!);
+            }
             break;
 
           case 'gray':
-            // If we have some yellow/green occurrences, this means we know the exact count
-            if (requiredCount > 0) {
-              letterCounts.set(letter, requiredCount);
-            } else {
+            // If this letter has both colored and gray instances, we already handled it
+            if (!mixedLetters.has(letter)) {
               mustNotContain.add(letter);
             }
             break;
