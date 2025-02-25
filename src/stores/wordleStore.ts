@@ -51,31 +51,47 @@ export const useWordleStore = defineStore('wordle', () => {
       notInPosition[i] = new Set<string>();
     }
 
+    // Track required count of each letter
+    const letterCounts = new Map<string, number>();
+
     // Process each row of guesses
     for (const row of guesses.value) {
       // Skip empty or incomplete rows
       if (row.some(g => g.letter === '')) continue;
+
+      // First pass: count non-gray occurrences of each letter
+      const rowLetterCounts = new Map<string, number>();
+      row.forEach((guess) => {
+        if (!guess.letter) return;
+        const letter = guess.letter.toLowerCase();
+        if (guess.color !== 'gray') {
+          rowLetterCounts.set(letter, (rowLetterCounts.get(letter) || 0) + 1);
+        }
+      });
 
       // Process each letter in the row
       row.forEach((guess, pos) => {
         if (!guess.letter) return;
 
         const letter = guess.letter.toLowerCase();
+        const requiredCount = rowLetterCounts.get(letter) || 0;
 
         switch (guess.color) {
           case 'green':
             positions[pos] = letter;  // Must be this letter in this position
-            mustContain.add(letter);  // Must contain this letter
+            letterCounts.set(letter, requiredCount);  // Update required count
             break;
 
           case 'yellow':
             notInPosition[pos].add(letter);  // Can't be this letter in this position
-            mustContain.add(letter);  // Must contain this letter somewhere
+            letterCounts.set(letter, requiredCount);  // Update required count
             break;
 
           case 'gray':
-            // Only add to mustNotContain if it's not required by a green or yellow
-            if (!mustContain.has(letter)) {
+            // If we have some yellow/green occurrences, this means we know the exact count
+            if (requiredCount > 0) {
+              letterCounts.set(letter, requiredCount);
+            } else {
               mustNotContain.add(letter);
             }
             break;
@@ -117,10 +133,11 @@ export const useWordleStore = defineStore('wordle', () => {
         return false;
       }
 
-      // Check if word contains all required letters
-      for (const letter of mustContain) {
-        if (!word.includes(letter)) {
-          console.log(`${word}: missing required letter ${letter}`);
+      // Check letter counts
+      for (const [letter, requiredCount] of letterCounts) {
+        const actualCount = (word.match(new RegExp(letter, 'g')) || []).length;
+        if (actualCount !== requiredCount) {
+          console.log(`${word}: has ${actualCount} ${letter}'s, needs ${requiredCount}`);
           return false;
         }
       }

@@ -72,18 +72,35 @@ describe('Wordle Store', () => {
     const store = useWordleStore()
     store.initializeGuesses()
     
-    // Set up a guess with two O's - one green, one gray
-    store.guesses[0][1].letter = 'O'
+    // Set up a guess with three E's - one green, one yellow, one gray
+    store.guesses[0][1].letter = 'E'
     store.guesses[0][1].color = 'green'
-    store.guesses[0][3].letter = 'O'
-    store.guesses[0][3].color = 'gray'
+    store.guesses[0][3].letter = 'E'
+    store.guesses[0][3].color = 'yellow'
+    store.guesses[0][4].letter = 'E'
+    store.guesses[0][4].color = 'gray'
     store.filterWordsBasedOnGuesses()
     
-    // Words should have exactly one O in position 1
+    // Words should have exactly two E's, one in position 1
     expect(store.filteredWords.every(word => {
-      const oCount = (word.word.match(/o/g) || []).length
-      return oCount === 1 && word.word[1] === 'o'
+      const eCount = (word.word.match(/e/g) || []).length
+      return eCount === 2 && word.word[1] === 'e' && word.word[3] !== 'e'
     })).toBe(true)
+  })
+
+  it('handles all gray repeated letters correctly', () => {
+    const store = useWordleStore()
+    store.initializeGuesses()
+    
+    // Set up a guess with two A's - both gray
+    store.guesses[0][0].letter = 'A'
+    store.guesses[0][0].color = 'gray'
+    store.guesses[0][2].letter = 'A'
+    store.guesses[0][2].color = 'gray'
+    store.filterWordsBasedOnGuesses()
+    
+    // Words should not contain any A's
+    expect(store.filteredWords.every(word => !word.word.includes('a'))).toBe(true)
   })
 
   it('handles yellow constraints correctly', () => {
