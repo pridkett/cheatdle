@@ -27,7 +27,7 @@ onMounted(() => {
     <header class="py-6 relative">
       <button
         @click="helpModal?.toggle()"
-        class="absolute top-4 right-4 p-2 rounded-lg bg-gray-200 hover:bg-gray-300"
+        class="absolute top-6 right-6 p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200"
         title="Help"
       >
         ❔
