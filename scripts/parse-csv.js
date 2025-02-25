@@ -8,6 +8,7 @@ const projectRoot = join(__dirname, '..')
 
 // Get input filename from command line args, default to google-words.txt
 const inputFile = process.argv[2] || 'words.txt'
+const outputFile = process.argv[3] || 'generatedWordlist.ts'
 
 try {
   // Read the input file
@@ -50,7 +51,7 @@ export default wordList
 `
 
   // Write the TypeScript file
-  writeFileSync(join(projectRoot, 'src', 'generatedWordlist.ts'), tsContent)
+  writeFileSync(join(projectRoot, 'src', outputFile), tsContent)
   console.log('Successfully generated wordlist')
 
 } catch (error) {
