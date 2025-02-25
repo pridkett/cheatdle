@@ -30,10 +30,10 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="p-1 sm:p-4 w-full max-w-md mx-auto">
-    <div class="grid grid-rows-6 gap-1 sm:gap-2 mx-auto">
-      <div v-for="(row, rowIndex) in 6" :key="rowIndex" 
-           class="grid grid-cols-5 gap-[2px] sm:gap-1 justify-items-center">
+  <div class="max-w-md mx-auto">
+    <div class="grid grid-rows-6 gap-2 sm:gap-2 mx-auto">
+      <div v-for="(row, rowIndex) in 6" :key="rowIndex"
+           class="grid grid-cols-5 gap-2 sm:gap-2 justify-items-center">
         <div
           v-for="(col, colIndex) in 5"
           :key="colIndex"

@@ -16,7 +16,7 @@ onMounted(() => {
   if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
     document.documentElement.classList.add('dark')
   }
-  
+
   store.initializeGuesses()
 })
 </script>
@@ -38,7 +38,7 @@ onMounted(() => {
         </h1>
 
         <div class="mt-6 flex justify-center">
-          <div class="flex flex-col lg:flex-row items-start gap-8 justify-center">
+          <div class="flex flex-col lg:flex-row items-start gap-x-8 gap-y-2 lg:gap-y-8 justify-center">
             <div class="flex flex-col items-center">
               <Board class="mb-8" />
               <Keyboard
