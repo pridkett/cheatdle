@@ -1,6 +1,10 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import wordlist from '../generatedWordlist'
+import { logger, LogLevel } from '../utils/logger'
+
+// Set desired log level
+logger.setLevel(LogLevel.INFO)
 
 export type GuessColor = 'white' | 'yellow' | 'green' | 'gray'
 
@@ -70,7 +74,7 @@ export const useWordleStore = defineStore('wordle', () => {
         if (guess.color === 'gray') {
           letterHasGray.add(letter);
         } else {
-          console.log(letter);
+          logger.debug('Processing colored letter:', letter);
           letterHasColor.add(letter);
           mixedLetters.set(letter, (mixedLetters.get(letter) || 0) + 1);
         }
@@ -135,7 +139,7 @@ export const useWordleStore = defineStore('wordle', () => {
     // console.log('Position patterns:', positionPatterns);
     // console.log('Must contain letters:', Array.from(mustContain));
     // console.log('Must not contain letters:', Array.from(mustNotContain));
-    console.log('Final regex pattern:', pattern);
+    logger.info('Final regex pattern:', pattern);
 
     // Filter words based on regex and must-contain constraints
     filteredWords.value = wordlist.filter(entry => {
@@ -153,7 +157,7 @@ export const useWordleStore = defineStore('wordle', () => {
       for (const [letter, requiredCount] of letterCounts) {
         const actualCount = (word.match(new RegExp(letter, 'g')) || []).length;
         if (actualCount !== requiredCount) {
-          console.log(`${word}: has ${actualCount} ${letter}'s, needs ${requiredCount}`);
+          logger.debug(`Word "${word}": has ${actualCount} ${letter}'s, needs ${requiredCount}`);
           return false;
         }
       }
