@@ -47,32 +47,12 @@ export const useWordleStore = defineStore('wordle', () => {
     if (row.some(g => g.letter === '')) return currentWords;
 
     // Track colored and gray instances of letters
-    const mixedLetters = new Map<string, number>();
-    const letterHasGray = new Set<string>();
-    const letterHasColor = new Set<string>();
+    const minLetters = new Map<string, number>();
+    const maxLetters = new Map<string, number>();
+
     const positions = Array(5).fill('.');
     const notInPosition = Array(5).fill(null).map(() => new Set<string>());
     const mustNotContain = new Set<string>();
-
-    // First pass: count colored instances and track gray letters
-    row.forEach((guess) => {
-      if (!guess.letter) return;
-      const letter = guess.letter.toLowerCase();
-      if (guess.color === 'gray') {
-        letterHasGray.add(letter);
-      } else {
-        logger.debug('Processing colored letter:', letter);
-        letterHasColor.add(letter);
-        mixedLetters.set(letter, (mixedLetters.get(letter) || 0) + 1);
-      }
-    });
-
-    // Keep only counts for letters that have both colored and gray instances
-    for (const letter of mixedLetters.keys()) {
-      if (!letterHasGray.has(letter)) {
-        mixedLetters.delete(letter);
-      }
-    }
 
     // Second pass: build position constraints
     row.forEach((guess, pos) => {
@@ -82,18 +62,37 @@ export const useWordleStore = defineStore('wordle', () => {
       switch (guess.color) {
         case 'green':
           positions[pos] = letter;
+          minLetters.set(letter, (minLetters.get(letter) || 0) + 1);
           break;
         case 'yellow':
           notInPosition[pos].add(letter);
+          minLetters.set(letter, (minLetters.get(letter) || 0) + 1);
           break;
         case 'gray':
-          if (!mixedLetters.has(letter)) {
+          if (!minLetters.has(letter)) {
             mustNotContain.add(letter);
+          } else {
+            maxLetters.set(letter, 1);
           }
           break;
       }
     });
 
+    // Iterate over the keys of maxLetters setting their values to minLetters[key]
+    maxLetters.forEach((_, key) => {
+      if (minLetters.has(key)) {
+      maxLetters.set(key, minLetters.get(key)!)
+      }
+    });
+
+    // Combine minLetters and maxLetters into a single map for mixed letters
+    const mixedLetters = new Map<string, number>();
+    minLetters.forEach((value, key) => {
+      mixedLetters.set(key, value);
+    });
+    maxLetters.forEach((value, key) => {
+      mixedLetters.set(key, value);
+    });
     // Build regex pattern for this row
     const pattern = '^' + positions.map((pos, i) => {
       if (pos !== '.') return pos;
@@ -101,21 +100,32 @@ export const useWordleStore = defineStore('wordle', () => {
       return excluded.size > 0 ? `[^${Array.from(excluded).join('')}]` : '.';
     }).join('') + '$';
 
-    logger.info('Row pattern:', pattern);
+    // logger.info('Row pattern:', pattern);
+    // logger.info('Mixed letters:', mixedLetters);
     const regex = new RegExp(pattern);
 
     // Filter words based on this row's constraints
     return currentWords.filter(entry => {
       const word = entry.word.toLowerCase();
-      
+
+      // logger.info('Checking word:', word, ' result: ', regex.test(word));
       // Check regex pattern
       if (!regex.test(word)) return false;
 
       // Check exact letter counts for mixed letters
-      for (const [letter, requiredCount] of mixedLetters) {
+      for (const [letter, requiredCount] of minLetters) {
         const actualCount = (word.match(new RegExp(letter, 'g')) || []).length;
-        if (actualCount !== requiredCount) {
-          logger.debug(`Word "${word}": has ${actualCount} ${letter}'s, needs ${requiredCount}`);
+        if (actualCount < requiredCount) {
+          // logger.debug(`Word "${word}": has ${actualCount} ${letter}'s, needs ${requiredCount}`);
+          return false;
+        }
+      }
+
+      // Check exact letter counts for mixed letters
+      for (const [letter, requiredCount] of maxLetters) {
+        const actualCount = (word.match(new RegExp(letter, 'g')) || []).length;
+        if (actualCount > requiredCount) {
+          logger.debug(`Word "${word}": has ${actualCount} ${letter}'s, needs = ${requiredCount}`);
           return false;
         }
       }
