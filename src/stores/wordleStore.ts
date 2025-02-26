@@ -43,118 +43,76 @@ export const useWordleStore = defineStore('wordle', () => {
     updateConstraints()
   }
 
-  function filterWordsBasedOnGuesses() {
-    // Process all guesses to build constraints
-    const positions = Array(5).fill('.');  // Default pattern for each position
-    const mustContain = new Set<string>();  // Letters that must be in the word
-    const mustNotContain = new Set<string>();  // Letters that must not be in the word
-    const notInPosition = Array(5).fill(new Set<string>());  // Letters that can't be in specific positions
+  function processRow(row: LetterGuess[], currentWords: typeof wordlist) {
+    if (row.some(g => g.letter === '')) return currentWords;
 
-    // Initialize notInPosition with new Sets
-    for (let i = 0; i < 5; i++) {
-      notInPosition[i] = new Set<string>();
-    }
+    // Track colored and gray instances of letters
+    const mixedLetters = new Map<string, number>();
+    const letterHasGray = new Set<string>();
+    const letterHasColor = new Set<string>();
+    const positions = Array(5).fill('.');
+    const notInPosition = Array(5).fill(null).map(() => new Set<string>());
+    const mustNotContain = new Set<string>();
 
-    // Track required count of each letter
-    const letterCounts = new Map<string, number>();
-
-    // Process each row of guesses
-    for (const row of guesses.value) {
-      // Skip empty or incomplete rows
-      if (row.some(g => g.letter === '')) continue;
-
-      // First pass: identify letters that have both colored and gray instances
-      const mixedLetters = new Map<string, number>();
-      const letterHasGray = new Set<string>();
-      const letterHasColor = new Set<string>();
-
-      row.forEach((guess) => {
-        if (!guess.letter) return;
-        const letter = guess.letter.toLowerCase();
-        if (guess.color === 'gray') {
-          letterHasGray.add(letter);
-        } else {
-          logger.debug('Processing colored letter:', letter);
-          letterHasColor.add(letter);
-          mixedLetters.set(letter, (mixedLetters.get(letter) || 0) + 1);
-        }
-      });
-
-      // Keep only counts for letters that have both colored and gray instances
-      for (const letter of mixedLetters.keys()) {
-        if (!letterHasGray.has(letter)) {
-          mixedLetters.delete(letter);
-        }
+    // First pass: count colored instances and track gray letters
+    row.forEach((guess) => {
+      if (!guess.letter) return;
+      const letter = guess.letter.toLowerCase();
+      if (guess.color === 'gray') {
+        letterHasGray.add(letter);
+      } else {
+        logger.debug('Processing colored letter:', letter);
+        letterHasColor.add(letter);
+        mixedLetters.set(letter, (mixedLetters.get(letter) || 0) + 1);
       }
-
-      // Process each letter in the row
-      row.forEach((guess, pos) => {
-        if (!guess.letter) return;
-
-        const letter = guess.letter.toLowerCase();
-
-        switch (guess.color) {
-          case 'green':
-            positions[pos] = letter;  // Must be this letter in this position
-            if (mixedLetters.has(letter)) {
-              letterCounts.set(letter, mixedLetters.get(letter)!);
-            }
-            break;
-
-          case 'yellow':
-            notInPosition[pos].add(letter);  // Can't be this letter in this position
-            if (mixedLetters.has(letter)) {
-              letterCounts.set(letter, mixedLetters.get(letter)!);
-            }
-            break;
-
-          case 'gray':
-            // If this letter has both colored and gray instances, we already handled it
-            if (!mixedLetters.has(letter)) {
-              mustNotContain.add(letter);
-            }
-            break;
-        }
-      });
-    }
-
-    // Build position patterns
-    const positionPatterns = positions.map((pos, i) => {
-      if (pos !== '.') {
-        return pos;  // Green letter - must be exactly this
-      }
-      // Combine position-specific exclusions with global must-not-contain letters
-      const excluded = new Set([
-        ...Array.from(notInPosition[i]),
-        ...Array.from(mustNotContain)
-      ]);
-      return excluded.size > 0 ? `[^${Array.from(excluded).join('')}]` : '.';
     });
 
-    // Build the complete regex pattern
-    const pattern = `^${positionPatterns.join('')}$`;
+    // Keep only counts for letters that have both colored and gray instances
+    for (const letter of mixedLetters.keys()) {
+      if (!letterHasGray.has(letter)) {
+        mixedLetters.delete(letter);
+      }
+    }
+
+    // Second pass: build position constraints
+    row.forEach((guess, pos) => {
+      if (!guess.letter) return;
+      const letter = guess.letter.toLowerCase();
+
+      switch (guess.color) {
+        case 'green':
+          positions[pos] = letter;
+          break;
+        case 'yellow':
+          notInPosition[pos].add(letter);
+          break;
+        case 'gray':
+          if (!mixedLetters.has(letter)) {
+            mustNotContain.add(letter);
+          }
+          break;
+      }
+    });
+
+    // Build regex pattern for this row
+    const pattern = '^' + positions.map((pos, i) => {
+      if (pos !== '.') return pos;
+      const excluded = new Set([...notInPosition[i], ...mustNotContain]);
+      return excluded.size > 0 ? `[^${Array.from(excluded).join('')}]` : '.';
+    }).join('') + '$';
+
+    logger.info('Row pattern:', pattern);
     const regex = new RegExp(pattern);
 
-    // Debug logging
-    // console.log('Position patterns:', positionPatterns);
-    // console.log('Must contain letters:', Array.from(mustContain));
-    // console.log('Must not contain letters:', Array.from(mustNotContain));
-    logger.info('Final regex pattern:', pattern);
-
-    // Filter words based on regex and must-contain constraints
-    filteredWords.value = wordlist.filter(entry => {
+    // Filter words based on this row's constraints
+    return currentWords.filter(entry => {
       const word = entry.word.toLowerCase();
+      
+      // Check regex pattern
+      if (!regex.test(word)) return false;
 
-      // Check the regex pattern which handles position and must-not-contain constraints
-      const regexMatch = regex.test(word);
-      if (!regexMatch) {
-        // console.log(`${word}: failed regex pattern ${pattern}`);
-        return false;
-      }
-
-      // Check letter counts
-      // console.log(letterCounts)
-      for (const [letter, requiredCount] of letterCounts) {
+      // Check exact letter counts for mixed letters
+      for (const [letter, requiredCount] of mixedLetters) {
         const actualCount = (word.match(new RegExp(letter, 'g')) || []).length;
         if (actualCount !== requiredCount) {
           logger.debug(`Word "${word}": has ${actualCount} ${letter}'s, needs ${requiredCount}`);
@@ -162,9 +120,15 @@ export const useWordleStore = defineStore('wordle', () => {
         }
       }
 
-      // console.log(`${word}: PASSED all filters`);
       return true;
     });
+  }
+
+  function filterWordsBasedOnGuesses() {
+    // Start with full word list and filter through each row
+    filteredWords.value = guesses.value.reduce((words, row) => {
+      return processRow(row, words);
+    }, wordlist);
   }
 
   function updateConstraints() {
