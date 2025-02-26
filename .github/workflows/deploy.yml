@@ -23,6 +23,9 @@ jobs:
 
       - name: Generate wordlist
         run: npm run prepare-wordlist
+      
+      - name: Run Unit Tests
+        run: npm run test:unit
         
       - name: Build
         run: npm run build
