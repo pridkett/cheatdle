@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import wordlist from '../generatedWordlist'
 
 export type GuessColor = 'white' | 'yellow' | 'green' | 'gray'
@@ -63,13 +63,14 @@ export const useWordleStore = defineStore('wordle', () => {
       const mixedLetters = new Map<string, number>();
       const letterHasGray = new Set<string>();
       const letterHasColor = new Set<string>();
-      
+
       row.forEach((guess) => {
         if (!guess.letter) return;
         const letter = guess.letter.toLowerCase();
         if (guess.color === 'gray') {
           letterHasGray.add(letter);
         } else {
+          console.log(letter);
           letterHasColor.add(letter);
           mixedLetters.set(letter, (mixedLetters.get(letter) || 0) + 1);
         }
@@ -87,7 +88,6 @@ export const useWordleStore = defineStore('wordle', () => {
         if (!guess.letter) return;
 
         const letter = guess.letter.toLowerCase();
-        const requiredCount = rowLetterCounts.get(letter) || 0;
 
         switch (guess.color) {
           case 'green':
@@ -135,7 +135,7 @@ export const useWordleStore = defineStore('wordle', () => {
     // console.log('Position patterns:', positionPatterns);
     // console.log('Must contain letters:', Array.from(mustContain));
     // console.log('Must not contain letters:', Array.from(mustNotContain));
-    // console.log('Final regex pattern:', pattern);
+    console.log('Final regex pattern:', pattern);
 
     // Filter words based on regex and must-contain constraints
     filteredWords.value = wordlist.filter(entry => {
@@ -144,11 +144,12 @@ export const useWordleStore = defineStore('wordle', () => {
       // Check the regex pattern which handles position and must-not-contain constraints
       const regexMatch = regex.test(word);
       if (!regexMatch) {
-        console.log(`${word}: failed regex pattern ${pattern}`);
+        // console.log(`${word}: failed regex pattern ${pattern}`);
         return false;
       }
 
       // Check letter counts
+      // console.log(letterCounts)
       for (const [letter, requiredCount] of letterCounts) {
         const actualCount = (word.match(new RegExp(letter, 'g')) || []).length;
         if (actualCount !== requiredCount) {
@@ -157,7 +158,7 @@ export const useWordleStore = defineStore('wordle', () => {
         }
       }
 
-      console.log(`${word}: PASSED all filters`);
+      // console.log(`${word}: PASSED all filters`);
       return true;
     });
   }
