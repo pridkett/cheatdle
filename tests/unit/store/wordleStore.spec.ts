@@ -170,7 +170,7 @@ describe('Wordle Store', () => {
 
     // Words should contain A but not in first position
     expect(store.filteredWords.every(word => {
-      console.log(word)
+      // console.log(word)
       return word.word.includes('a') && word.word[0] !== 'a'
     })).toBe(true)
   })
